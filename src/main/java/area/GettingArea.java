@@ -1,7 +1,6 @@
 package main.java.area;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by gudnam on 2017. 6. 7..
@@ -12,26 +11,30 @@ public class GettingArea {
     public static final int FILL = 1;
     public static final int PASSED = 2;
 
-    List<Integer> results;
+    List<Integer> rectSizeList;
 
     public GettingArea() {
-        results = new ArrayList<>();
+        rectSizeList = new ArrayList<>();
     }
 
-    public int[][] fillArea(int[][] area, List<Integer[][]> rectAreaList) {
+    public int[][] fillArea(final int[][] area, List<Integer[][]> rectvisitedList) {
 
         int[][] filledArea = new int[area.length][area[0].length];
-        for (int i=0; i<area.length; i++) {
-            for (int j=0; j<area[i].length; j++) {
-                for (Integer[][] rect : rectAreaList) {
-                    if ((rect[0][0] <= i && i <= rect[1][0]) &&
-                            (rect[0][1] <= j && j <= rect[1][1]))
+        for (Integer[][] rect : rectvisitedList) {
+            for (int i=0; i<area.length; i++) {
+                for (int j=0; j<area[i].length; j++) {
+                    if ((rect[0][0] <= i && i < rect[1][0]) &&
+                            (rect[0][1] <= j && j < rect[1][1]))
                         filledArea[i][j] = FILL;
-                    else
-                        filledArea[i][j] = area[i][j];
+                    else {
+                        if (filledArea[i][j] != FILL)
+                            filledArea[i][j] = area[i][j];
+                    }
                 }
             }
         }
+
+        showGraph(filledArea);
 
         return filledArea;
     }
@@ -49,21 +52,22 @@ public class GettingArea {
     }
 
     public List<Integer> getEmptyAreaList(int[][] area) {
-        List<Integer> emptyAreaLengthList = new ArrayList<>();
+        next(area, 0, 0);
 
-        next(area, 0, 0, 0);
-//        emptyAreaLengthList.add(1);
-//        emptyAreaLengthList.add(7);
-//        emptyAreaLengthList.add(13);
-
-        return emptyAreaLengthList;
+        return rectSizeList;
     }
 
-    private int[] getStart(int[][] area, int x, int y) {
+    private void next(final int[][] area, int x, int y) {
+        int[] start = getEmptyPosition(area, x, y);
+
+//        if (start == null || start[0] <= area.length)
+    }
+
+    private int[] getEmptyPosition(int[][] area, int x, int y) {
         int[] start = new int[2];
         for (int i=x; i<area.length; i++) {
             for (int j=y; j<area[0].length; j++) {
-                if (area[i][j] == FILL) {
+                if (area[i][j] == EMPTY) {
                     return new int[]{i, j};
                 }
             }
@@ -71,25 +75,14 @@ public class GettingArea {
         return null;
     }
 
-    List<Integer> rectSizeList = new ArrayList<>();
-    private void next(final int[][] area, int x, int y, int rectSize) {
-        if (area[x][y] != FILL) {
-            int[] start = getStart(area, x, y);
-            next(area, start[0], start[1], ++rectSize);
+    private void showGraph(int[][] area) {
+        for (int j=0; j<area[0].length; j++) {
+            System.out.println();
+            for (int i=0; i<area.length; i++) {
+                System.out.print(area[i][j]);
+            }
         }
-
-        area[x][y] = PASSED;
-
-        if (y < area[1].length -1 && area[y+1][x] == FILL) {
-            next(area, x, y + 1, ++rectSize);
-        } else if (y > 0 && area[y-1][x] == FILL) {
-            next(area, x, y - 1, ++rectSize);
-        } else if (x < area[0].length-1 && area[y][x + 1] == FILL) {
-            next(area, x + 1, y, ++rectSize);
-        } else if (x > 0 && area[y][x - 1] != 0) {
-            next(area, x - 1, y, ++rectSize);
-        } else {
-            rectSizeList.add(rectSize);
-        }
+        System.out.println();
+        System.out.println();
     }
 }
