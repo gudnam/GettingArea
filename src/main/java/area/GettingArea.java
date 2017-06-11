@@ -24,12 +24,13 @@ public class GettingArea {
         for (Integer[][] rect : rectvisitedList) {
             for (int i=0; i<area.length; i++) {
                 for (int j=0; j<area[i].length; j++) {
+                    int y = (area[i].length-1) - j;
                     if ((rect[0][0] <= i && i < rect[1][0]) &&
                             (rect[0][1] <= j && j < rect[1][1]))
-                        filledArea[i][j] = FILL;
+                        filledArea[i][y] = FILL;
                     else {
-                        if (filledArea[i][j] != FILL)
-                            filledArea[i][j] = area[i][j];
+                        if (filledArea[i][y] != FILL)
+                            filledArea[i][y] = area[i][j];
                     }
                 }
             }
