@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static main.java.area.GettingArea.EMPTY;
 import static main.java.area.GettingArea.FILL;
@@ -80,7 +79,7 @@ public class GettingAreaTest {
 
         int[][] filledArea = getTestArea();
 
-        List<Integer> emptyAreaLengthList = ga.getEmptyAreaList(filledArea);
+        List<Integer> emptyAreaLengthList = ga.showEmptyAreaList(filledArea);
 
         assertTrue(emptyAreaLengthList.size() == 3);
         assertTrue(emptyAreaLengthList.get(0) == 7);
@@ -96,7 +95,7 @@ public class GettingAreaTest {
                 filledArea[i][j] = FILL;
             }
         }
-        assertTrue(ga.getEmptyAreaList(filledArea).size() == 0);
+        assertTrue(ga.showEmptyAreaList(filledArea).size() == 0);
     }
 
     @Test
@@ -107,6 +106,6 @@ public class GettingAreaTest {
                 filledArea[i][j] = PASSED;
             }
         }
-        assertTrue(ga.getEmptyAreaList(filledArea).size() == 0);
+        assertTrue(ga.showEmptyAreaList(filledArea).size() == 0);
     }
 }
