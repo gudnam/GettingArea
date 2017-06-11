@@ -11,7 +11,8 @@ public class GettingArea {
     public static final int FILL = 1;
     public static final int PASSED = 2;
 
-    List<Integer> rectSizeList;
+    private int cnt = 0;
+    private List<Integer> rectSizeList;
 
     public GettingArea() {
         rectSizeList = new ArrayList<>();
@@ -52,15 +53,44 @@ public class GettingArea {
     }
 
     public List<Integer> getEmptyAreaList(int[][] area) {
-        next(area, 0, 0);
+
+        int[] start = new int[2];
+        while (start != null) {
+            cnt = 0;
+            start = getEmptyPosition(area, 0, 0);
+            if (start != null) {
+                next(area, start[0], start[1]);
+
+                showGraph(area);
+                rectSizeList.add(cnt);
+
+                System.out.println("rect count : " + cnt + ", rect size : " + rectSizeList.size());
+            }
+        }
 
         return rectSizeList;
     }
 
-    private void next(final int[][] area, int x, int y) {
-        int[] start = getEmptyPosition(area, x, y);
-
-//        if (start == null || start[0] <= area.length)
+    private void next(int[][] area, int x, int y) {
+        System.out.println("(" + x + ", " + y + ")");
+        cnt++;
+        area[x][y] = PASSED;
+        if (x+1 < area.length && area[x+1][y] <= area.length && area[x+1][y] == EMPTY) {
+            System.out.println("right");
+            next(area, x+1, y);
+        }
+        if (x-1 >= 0 && area[x-1][y] >= 0 && area[x-1][y] == EMPTY) {
+            System.out.println("left");
+            next(area, x-1, y);
+        }
+        if (y+1 < area[x].length && area[x][y+1] <= area[x].length && area[x][y+1] == EMPTY) {
+            System.out.println("up");
+            next(area, x, y+1);
+        }
+        if (y-1 >= 0 && area[x][y-1] >= 0 && area[x][y-1] == EMPTY) {
+            System.out.println("down");
+            next(area, x, y-1);
+        }
     }
 
     private int[] getEmptyPosition(int[][] area, int x, int y) {

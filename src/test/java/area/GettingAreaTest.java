@@ -10,6 +10,7 @@ import java.util.Map;
 
 import static main.java.area.GettingArea.EMPTY;
 import static main.java.area.GettingArea.FILL;
+import static main.java.area.GettingArea.PASSED;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -60,8 +61,7 @@ public class GettingAreaTest {
         assertTrue(areaCount-filledCount == 27);
     }
 
-    @Test
-    public void testToGetEmptyArea() {
+    private int[][] getTestArea() {
         int x=7, y=5;
         Integer rect1[][] = {{0, 2}, {4, 4}};
         Integer rect2[][] = {{1, 1}, {2, 5}};
@@ -72,19 +72,41 @@ public class GettingAreaTest {
         rectAreaList.add(rect2);
         rectAreaList.add(rect3);
 
-        int[][] filledArea = ga.fillArea(ga.initializeArea(x, y), rectAreaList);
-
-        List<Integer> emptyAreaLengthList = ga.getEmptyAreaList(filledArea);
-
-        assertTrue(emptyAreaLengthList.size() == 1);
-        assertTrue(emptyAreaLengthList.get(0) == 27);
+        return ga.fillArea(ga.initializeArea(x, y), rectAreaList);
     }
 
     @Test
-    public void test() {
-        int[][] a = new int[10][5];
+    public void testToGetEmptyArea() {
 
-        System.out.println("x : " + a.length);
-        System.out.println("y : " + a[0].length);
+        int[][] filledArea = getTestArea();
+
+        List<Integer> emptyAreaLengthList = ga.getEmptyAreaList(filledArea);
+
+        assertTrue(emptyAreaLengthList.size() == 3);
+        assertTrue(emptyAreaLengthList.get(0) == 7);
+        assertTrue(emptyAreaLengthList.get(1) == 1);
+        assertTrue(emptyAreaLengthList.get(2) == 13);
+    }
+
+    @Test
+    public void testRectSizeListIsZeroIfAreaIsAllFilled() {
+        int[][] filledArea = getTestArea();
+        for (int i=0; i<filledArea.length; i++) {
+            for (int j=0; j<filledArea[i].length; j++) {
+                filledArea[i][j] = FILL;
+            }
+        }
+        assertTrue(ga.getEmptyAreaList(filledArea).size() == 0);
+    }
+
+    @Test
+    public void testRectSizeListIsZeroIfAreaIsAllPassed() {
+        int[][] filledArea = getTestArea();
+        for (int i=0; i<filledArea.length; i++) {
+            for (int j=0; j<filledArea[i].length; j++) {
+                filledArea[i][j] = PASSED;
+            }
+        }
+        assertTrue(ga.getEmptyAreaList(filledArea).size() == 0);
     }
 }
